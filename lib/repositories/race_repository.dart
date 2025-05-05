@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 
 class RaceRepository {
   final db = FirebaseDatabase.instance.ref();
@@ -19,24 +18,13 @@ class RaceRepository {
     }
   }
 
-  DatabaseReference getUsersStream() {
-    return db.child('users');
-  }
+  DatabaseReference getUsersStream() => db.child('users');
 
-  DatabaseReference getRacesStream() {
-    return db.child('races');
-  }
+  DatabaseReference getRacesStream() => db.child('races');
 
-  DatabaseReference getParticipantsStream(String raceId) {
-    debugPrint("===============================================");
-    debugPrint('Fetching participants');
-    debugPrint('Loaded participants: ${db.child('races/$raceId/participants')}');
-    debugPrint("===============================================");
+  DatabaseReference getParticipantsStream(String raceId) =>
+      db.child('races/$raceId/participants');
 
-    return db.child('races/$raceId/participants');
-  }
-
-  DatabaseReference getStartTimeStream(String raceId) {
-    return db.child('races/$raceId/startTime');
-  }
+  DatabaseReference getStartTimeStream(String raceId) =>
+      db.child('races/$raceId/startTime');
 }

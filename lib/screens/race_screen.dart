@@ -50,8 +50,8 @@ class _RaceScreenState extends State<RaceScreen> {
   Widget build(BuildContext context) {
     final raceProvider = Provider.of<RaceProvider>(context);
     final race = raceProvider.races[widget.raceId];
-    final segmentName =
-        race['segments']?['race${widget.raceNumber}'] ?? 'Race ${widget.raceNumber}';
+    final segmentName = race?['segments']?['race${widget.raceNumber}'] ??
+        'Race ${widget.raceNumber}';
 
     final participantIds = raceProvider.participants.entries
         .where((e) => e.value.currentRace == widget.raceNumber)
