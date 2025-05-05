@@ -12,6 +12,9 @@ class RaceProvider with ChangeNotifier {
   int? startTime;
   String? currentRaceId;
 
+  // Store last elapsed time per raceId
+  Map<String, Duration> lastElapsedTimes = {};
+
   RaceProvider() {
     _listenToRaces();
     _listenToUsers();
@@ -37,8 +40,9 @@ class RaceProvider with ChangeNotifier {
     _repo.getUsersStream().onValue.listen((event) {
       final data = event.snapshot.value as Map?;
       if (data != null) {
-        users = data.map((key, value) =>
-            MapEntry(key, User.fromMap(key, Map<String, dynamic>.from(value))));
+        users = data.map((key, value) {
+          return MapEntry(key, User.fromMap(key, Map<String, dynamic>.from(value)));
+        });
         notifyListeners();
       }
     });
@@ -49,8 +53,9 @@ class RaceProvider with ChangeNotifier {
     _repo.getParticipantsStream(currentRaceId!).onValue.listen((event) {
       final data = event.snapshot.value as Map?;
       if (data != null) {
-        participants = data.map((key, value) => MapEntry(
-            key, Participant.fromMap(key, Map<String, dynamic>.from(value))));
+        participants = data.map((key, value) {
+          return MapEntry(key, Participant.fromMap(key, Map<String, dynamic>.from(value)));
+        });
         notifyListeners();
       }
     });
@@ -66,8 +71,6 @@ class RaceProvider with ChangeNotifier {
 
   Future<void> startRace() => _repo.startRace(currentRaceId!);
 
-  Future<void> finishParticipant(String id, int raceNumber) async {
-    await _repo.finishParticipant(currentRaceId!, id, raceNumber);
-    // Let the listener auto-refresh participants
-  }
+  Future<void> finishParticipant(String id, int raceNumber) =>
+      _repo.finishParticipant(currentRaceId!, id, raceNumber);
 }

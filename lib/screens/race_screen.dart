@@ -23,25 +23,30 @@ class _RaceScreenState extends State<RaceScreen> {
   @override
   void initState() {
     super.initState();
+    final raceProvider = Provider.of<RaceProvider>(context, listen: false);
+
+    // Load saved elapsed if exists
+    if (raceProvider.lastElapsedTimes.containsKey(widget.raceId)) {
+      _elapsed = raceProvider.lastElapsedTimes[widget.raceId]!;
+    }
+
     _startLiveTimer();
   }
 
   void _startLiveTimer() {
     final raceProvider = Provider.of<RaceProvider>(context, listen: false);
+
+    final activeParticipants = raceProvider.participants.values
+        .where((p) => p.currentRace == widget.raceNumber)
+        .toList();
+
+    if (activeParticipants.isEmpty) {
+      debugPrint('No active participants → skip timer');
+      return;
+    }
+
     _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       final startTime = raceProvider.startTime;
-
-      // Check if race 3 and no participants left → stop timer
-      if (widget.raceNumber == 3) {
-        final activeParticipants = raceProvider.participants.values
-            .where((p) => p.currentRace == 3)
-            .toList();
-
-        if (activeParticipants.isEmpty) {
-          _timer.cancel();
-          return;
-        }
-      }
 
       if (startTime != null) {
         final now = DateTime.now();
@@ -50,12 +55,24 @@ class _RaceScreenState extends State<RaceScreen> {
           _elapsed = now.difference(start);
         });
       }
+
+      final stillActive = raceProvider.participants.values
+          .where((p) => p.currentRace == widget.raceNumber)
+          .toList();
+
+      if (stillActive.isEmpty) {
+        raceProvider.lastElapsedTimes[widget.raceId] = _elapsed;
+        _timer.cancel();
+        debugPrint('Timer stopped + saved elapsed time');
+      }
     });
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
     super.dispose();
   }
 
@@ -77,29 +94,26 @@ class _RaceScreenState extends State<RaceScreen> {
         children: [
           TimerDisplay(duration: _elapsed),
           Expanded(
-            child: participantIds.isEmpty
-                ? const Center(child: Text('No participants left in this race.'))
-                : ListView(
-                    children: participantIds.map((id) {
-                      final user = raceProvider.users[id];
-                      final participant = raceProvider.participants[id];
-                      if (user == null || participant == null) return const SizedBox.shrink();
+            child: ListView(
+              children: participantIds.map((id) {
+                final user = raceProvider.users[id];
+                final participant = raceProvider.participants[id];
+                if (user == null || participant == null) return const SizedBox.shrink();
 
-                      return ParticipantCard(
-                        user: user,
-                        participant: participant,
-                        onFinish: () async {
-                          await raceProvider.finishParticipant(id, widget.raceNumber);
-                          setState(() {}); // force refresh to update list after finish
-                        },
-                      );
-                    }).toList(),
-                  ),
+                return ParticipantCard(
+                  user: user,
+                  participant: participant,
+                  onFinish: () async {
+                    await raceProvider.finishParticipant(id, widget.raceNumber);
+                  },
+                );
+              }).toList(),
+            ),
           ),
           if (widget.raceNumber < 3)
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => RaceScreen(
@@ -114,7 +128,7 @@ class _RaceScreenState extends State<RaceScreen> {
           else
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ResultScreen(raceId: widget.raceId),
