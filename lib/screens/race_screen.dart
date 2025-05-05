@@ -30,6 +30,19 @@ class _RaceScreenState extends State<RaceScreen> {
     final raceProvider = Provider.of<RaceProvider>(context, listen: false);
     _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       final startTime = raceProvider.startTime;
+
+      // Check if race 3 and no participants left → stop timer
+      if (widget.raceNumber == 3) {
+        final activeParticipants = raceProvider.participants.values
+            .where((p) => p.currentRace == 3)
+            .toList();
+
+        if (activeParticipants.isEmpty) {
+          _timer.cancel();
+          return;
+        }
+      }
+
       if (startTime != null) {
         final now = DateTime.now();
         final start = DateTime.fromMillisecondsSinceEpoch(startTime);
@@ -50,11 +63,11 @@ class _RaceScreenState extends State<RaceScreen> {
   Widget build(BuildContext context) {
     final raceProvider = Provider.of<RaceProvider>(context);
     final race = raceProvider.races[widget.raceId];
-    final segmentName = race?['segments']?['race${widget.raceNumber}'] ??
-        'Race ${widget.raceNumber}';
+    final segmentName =
+        race['segments']?['race${widget.raceNumber}'] ?? 'Race ${widget.raceNumber}';
 
     final participantIds = raceProvider.participants.entries
-        .where((e) => e.value.currentRace == widget.raceNumber) // only those in this race
+        .where((e) => e.value.currentRace == widget.raceNumber)
         .map((e) => e.key)
         .toList();
 
@@ -64,21 +77,24 @@ class _RaceScreenState extends State<RaceScreen> {
         children: [
           TimerDisplay(duration: _elapsed),
           Expanded(
-            child: ListView(
-              children: participantIds.map((id) {
-                final user = raceProvider.users[id];
-                final participant = raceProvider.participants[id];
-                if (user == null || participant == null) return const SizedBox.shrink();
+            child: participantIds.isEmpty
+                ? const Center(child: Text('No participants left in this race.'))
+                : ListView(
+                    children: participantIds.map((id) {
+                      final user = raceProvider.users[id];
+                      final participant = raceProvider.participants[id];
+                      if (user == null || participant == null) return const SizedBox.shrink();
 
-                return ParticipantCard(
-                  user: user,
-                  participant: participant,
-                  onFinish: () async {
-                    await raceProvider.finishParticipant(id, widget.raceNumber);
-                  },
-                );
-              }).toList(),
-            ),
+                      return ParticipantCard(
+                        user: user,
+                        participant: participant,
+                        onFinish: () async {
+                          await raceProvider.finishParticipant(id, widget.raceNumber);
+                          setState(() {}); // force refresh to update list after finish
+                        },
+                      );
+                    }).toList(),
+                  ),
           ),
           if (widget.raceNumber < 3)
             ElevatedButton(
