@@ -28,7 +28,10 @@ class RaceSelectorScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => StartScreen(raceId: raceId),
+                          builder: (_) => StartScreen(
+                            raceId: raceId,
+                            raceName: raceName,
+                          ),
                         ),
                       );
                     },

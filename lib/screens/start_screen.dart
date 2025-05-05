@@ -6,20 +6,21 @@ import 'race_screen.dart';
 
 class StartScreen extends StatelessWidget {
   final String raceId;
+  final String raceName;
 
-  const StartScreen({required this.raceId, super.key});
+  const StartScreen({required this.raceId, required this.raceName, super.key});
 
   @override
   Widget build(BuildContext context) {
     final raceProvider = Provider.of<RaceProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Start Race')),
+      appBar: AppBar(title: Text(raceName)),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const TimerDisplay(duration: Duration.zero), // Always shows 00:00:00.000
+            const TimerDisplay(duration: Duration.zero),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () async {

@@ -50,7 +50,7 @@ class RaceScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => StartScreen(raceId: raceId),
+                          builder: (_) => StartScreen(raceId: raceId, raceName: raceProvider.races[raceId]['name']),
                         ),
                       );
                     }
