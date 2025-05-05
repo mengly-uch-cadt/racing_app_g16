@@ -14,7 +14,7 @@ class Participant {
 
     return Participant(
       id: id,
-      currentRace: data['currentRace'] ?? 1, // fallback to race 1 if missing
+      currentRace: data['currentRace'] ?? 1,
       raceTimestamps: {
         'race1': rawTimestamps != null && rawTimestamps['race1'] != null
             ? DateTime.fromMillisecondsSinceEpoch(rawTimestamps['race1'])
