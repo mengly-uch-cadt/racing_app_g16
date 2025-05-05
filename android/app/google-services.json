@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "452156554877",
+    "firebase_url": "https://racing-app-72954-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "racing-app-72954",
+    "storage_bucket": "racing-app-72954.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452156554877:android:e618446b120a9c409b3b14",
+        "android_client_info": {
+          "package_name": "com.example.racing_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUeHL5xi5z4lVUem9eZ1EDAbmS6oJID0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

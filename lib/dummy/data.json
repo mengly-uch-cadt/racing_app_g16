@@ -1,0 +1,38 @@
+{
+    "users": {
+      "u001": { "id": "u001", "bib": 1, "name": "Runner 1" },
+      "u002": { "id": "u002", "bib": 2, "name": "Runner 2" },
+      "u003": { "id": "u003", "bib": 3, "name": "Runner 3" },
+      "u004": { "id": "u004", "bib": 4, "name": "Runner 4" },
+      "u005": { "id": "u005", "bib": 5, "name": "Runner 5" }
+    },
+    "races": {
+      "race001": {
+        "name": "Morning Sprint",
+        "startTime": null,
+        "participants": {
+          "u001": {
+            "currentRace": 1,
+            "raceTimestamps": { "race1": null, "race2": null, "race3": null }
+          },
+          "u002": {
+            "currentRace": 1,
+            "raceTimestamps": { "race1": null, "race2": null, "race3": null }
+          },
+          "u003": {
+            "currentRace": 1,
+            "raceTimestamps": { "race1": null, "race2": null, "race3": null }
+          },
+          "u004": {
+            "currentRace": 1,
+            "raceTimestamps": { "race1": null, "race2": null, "race3": null }
+          },
+          "u005": {
+            "currentRace": 1,
+            "raceTimestamps": { "race1": null, "race2": null, "race3": null }
+          }
+        }
+      }
+    }
+  }
+  
