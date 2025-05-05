@@ -26,7 +26,7 @@ class StartScreen extends StatelessWidget {
               onPressed: () async {
                 raceProvider.init(raceId);
                 await raceProvider.startRace();
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => RaceScreen(raceId: raceId, raceNumber: 1),

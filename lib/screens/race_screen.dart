@@ -54,7 +54,7 @@ class _RaceScreenState extends State<RaceScreen> {
         'Race ${widget.raceNumber}';
 
     final participantIds = raceProvider.participants.entries
-        .where((e) => e.value.currentRace == widget.raceNumber)
+        .where((e) => e.value.currentRace == widget.raceNumber) // only those in this race
         .map((e) => e.key)
         .toList();
 
@@ -83,7 +83,7 @@ class _RaceScreenState extends State<RaceScreen> {
           if (widget.raceNumber < 3)
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => RaceScreen(
@@ -98,7 +98,7 @@ class _RaceScreenState extends State<RaceScreen> {
           else
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ResultScreen(raceId: widget.raceId),
